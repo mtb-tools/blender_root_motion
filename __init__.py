@@ -371,10 +371,10 @@ class OBJECT_OT_ConvertBatch(bpy.types.Operator):
         return{ 'FINISHED'}
 
 
-class MixamoconvPanel(bpy.types.Panel):
+class MIXAMOCONV_VIEW_3D_PT_mixamoconv(bpy.types.Panel):
     """Creates a Tab in the Toolshelve in 3D_View"""
     bl_label = "Mixamo Rootbaker"
-    bl_idname = "ANIMATION_PT_mixamo"
+    bl_idname = "MIXAMOCONV_VIEW_3D_PT_mixamoconv"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "Mixamo"
@@ -481,26 +481,28 @@ class MixamoconvPanel(bpy.types.Panel):
         row.operator("mixamo.convertbatch")
         status_row = box.row()
 
+classes = (
+    OBJECT_OT_RemoveNamespace,
+    OBJECT_OT_UseBlenderBoneNames,
+    OBJECT_OT_ConvertSingle,
+    OBJECT_OT_ConvertSingleStepwise,
+    OBJECT_OT_ApplyRestoffset,
+    OBJECT_OT_ConvertBatch,
+    MIXAMOCONV_VIEW_3D_PT_mixamoconv,
+)
 
 def register():
     bpy.utils.register_class(MixamoPropertyGroup)
     bpy.types.Scene.mixamo = bpy.props.PointerProperty(type=MixamoPropertyGroup)
-    # bpy.utils.register_module(__name__)
-    bpy.utils.register_class(OBJECT_OT_ConvertSingle)
-    bpy.utils.register_class(OBJECT_OT_ConvertBatch)
-    bpy.utils.register_class(MixamoconvPanel)
-    
+    for cls in classes:
+        bpy.utils.register_class(cls)
 
 
 def unregister():
-    # bpy.utils.unregister_module(__name__)
-    
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
     bpy.utils.unregister_class(MixamoPropertyGroup)
-    bpy.utils.unregister_class(OBJECT_OT_ConvertSingle)
-    bpy.utils.register_class(OBJECT_OT_ConvertBatch)
-    bpy.utils.unregister_class(MixamoconvPanel)
     
-
 
 if __name__ == "__main__":
     register()
