@@ -142,7 +142,7 @@ def apply_restoffset(armature, hipbone, restoffset):
     bpy.ops.armature.select_all(action='SELECT')
     bpy.ops.transform.translate(value=restoffset, constraint_axis=(False, False, False),
                                 orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
-                                proportional_edit_falloff='SMOOTH', proportional_size=1)
+                                )
     bpy.ops.object.mode_set(mode='OBJECT')
 
     # apply restoffset to animation of hip
@@ -262,10 +262,7 @@ def hip_to_root(armature, use_x=True, use_y=True, use_z=True, on_ground=True, us
     z_offset = hiplocation_world[2]
 
     # Create helper to bake the root motion
-    bpy.ops.object.empty_add(type='ARROWS', radius=1, align='WORLD', location=(0, 0, 0),    #     layers=(
-    #     True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
-    #     False, False, False, False)
-    )
+    bpy.ops.object.empty_add(type='ARROWS', radius=1, align='WORLD', location=(0, 0, 0))
     rootBaker = bpy.context.object
     rootBaker.name = "rootBaker"
     rootBaker.rotation_mode = 'QUATERNION'
@@ -308,10 +305,7 @@ def hip_to_root(armature, use_x=True, use_y=True, use_z=True, on_ground=True, us
     yield Status("rootBaker quatCleanup")
 
     # Create helper to bake hipmotion in Worldspace
-    bpy.ops.object.empty_add(type='ARROWS', radius=1, align='WORLD', location=(0, 0, 0), #layers=(
-    # True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
-    # False, False, False, False)
-    )
+    bpy.ops.object.empty_add(type='ARROWS', radius=1, align='WORLD', location=(0, 0, 0))
     hipsBaker = bpy.context.object
     hipsBaker.name = "hipsBaker"
     hipsBaker.rotation_mode = 'QUATERNION'
@@ -332,7 +326,7 @@ def hip_to_root(armature, use_x=True, use_y=True, use_z=True, on_ground=True, us
     yield Status("hipsBaker quatClenaup")
 
     # select armature
-    root.select_set(state = True)
+    root.select_set(True)
     bpy.context.view_layer.objects.active = root
 
     if apply_rotation or apply_scale:
@@ -354,7 +348,7 @@ def hip_to_root(armature, use_x=True, use_y=True, use_z=True, on_ground=True, us
     yield Status("rootBaker baked back")
     quaternion_cleanup(root)
     yield Status("root quaternion cleanup")
-    hipsBaker.select_set(state = False)
+    hipsBaker.select_set(False)
 
     bpy.ops.object.mode_set(mode='POSE')
     hips.bone.select = True
@@ -378,8 +372,8 @@ def hip_to_root(armature, use_x=True, use_y=True, use_z=True, on_ground=True, us
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
 
-    hipsBaker.select_set(state = True)
-    rootBaker.select_set(state = True)
+    hipsBaker.select_set(True)
+    rootBaker.select_set(True)
 
     bpy.ops.object.delete(use_global=False)
     yield Status("bakers deleted")
@@ -395,19 +389,15 @@ def hip_to_root(armature, use_x=True, use_y=True, use_z=True, on_ground=True, us
                         break
         if bindmesh is None:
             bpy.ops.object.select_all(action='DESELECT')
-            bpy.ops.mesh.primitive_plane_add(size=1, align='WORLD', enter_editmode=False, location=(0, 0, 0),
-                                            #  layers=(
-                                            #  True, False, False, False, False, False, False, False, False, False, False,
-                                            #  False, False, False, False, False, False, False, False, False)
-                                             )
+            bpy.ops.mesh.primitive_plane_add(size=1, align='WORLD', enter_editmode=False, location=(0, 0, 0))
             binddummy = bpy.context.object
             binddummy.name = 'binddummy'
-            root.select_set(state = True)
+            root.select_set(True)
             bpy.context.view_layer.objects.active = root
             bpy.ops.object.parent_set(type='ARMATURE')
             yield Status("binddummy created")
         elif apply_rotation or apply_scale:
-            bindmesh.select_set(state = True)
+            bindmesh.select_set(True)
             bpy.context.view_layer.objects.active = bindmesh
             bpy.ops.object.transform_apply(location=False, rotation=apply_rotation, scale=apply_scale)
             yield Status("apply transform to bindmesh")
@@ -513,7 +503,6 @@ def batch_hip_to_root(source_dir, dest_dir, use_x=True, use_y=True, use_z=True, 
             # store file to disk
             output_file = dest_dir + file.name[:-4] + ".fbx"
             bpy.ops.export_scene.fbx(filepath=output_file,
-                                    #  version='BIN7400',
                                      use_selection=False,
                                      apply_unit_scale=False,
                                      add_leaf_bones=add_leaf_bones,
